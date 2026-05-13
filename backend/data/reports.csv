@@ -1,0 +1,4 @@
+report_date,country,region,latitude,longitude,confirmed_cases,deaths,virus_type,source_name,source_url,notes
+2026-05-08,Multi-country,MV Hondius cruise ship,28.2916,-16.6291,8,3,Andes virus,WHO Disease Outbreak News,https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON600,WHO reported a hantavirus cluster linked to cruise ship travel as of 8 May 2026.
+2026-04-23,United States,National,39.8283,-98.5795,890,,Hantavirus disease,CDC,https://www.cdc.gov/hantavirus/data-research/cases/index.html,Cumulative reported U.S. hantavirus disease cases from 1993-2023.
+2015-01-01,Canada,National,56.1304,-106.3468,109,27,Hantavirus infection,PHAC,https://www.canada.ca/en/public-health/services/diseases/hantaviruses/surveillance-hantavirus-related-diseases.html,Cumulative confirmed Canadian cases since 1989 from PHAC surveillance page.
