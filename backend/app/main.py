@@ -10,6 +10,13 @@ from .storage import get_live_items, latest_refresh, connect
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "reports.csv"
 
 app = FastAPI(title="HantaWatch Real-Time API", version="2.0.0")
+@app.get("/")
+def root():
+    return {"message": "HantaWatch API is running", "docs": "/docs"}
+
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
