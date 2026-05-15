@@ -1,60 +1,145 @@
 # HantaWatch Real-Time MVP 🐭🦠
 
-HantaWatch is an educational public-health surveillance dashboard for hantavirus reports. Version 2 upgrades the original CSV-only prototype into a real-time MVP with scheduled public feed ingestion.
+HantaWatch is a real-time educational public-health surveillance dashboard for hantavirus-related reports and outbreak monitoring.
 
-> Important: This is not an official medical, clinical, emergency, or government surveillance system.
+The platform combines a curated baseline dataset with scheduled ingestion from official/public feeds and pages to provide situational awareness through a modern full-stack dashboard.
 
-## What changed in the real-time version?
+> ⚠️ Educational use only. This project is not an official medical, clinical, governmental, or emergency alert system.
 
-The original MVP used only `backend/data/reports.csv`.
+---
 
-This version adds:
+# 🌐 Live Deployment
 
-- FastAPI live-ingestion endpoints
-- SQLite storage for live feed matches
-- RSS/public page monitoring
-- Scheduled refresh every 6 hours using APScheduler
-- Manual refresh endpoint and frontend button
-- Live ingestion status card
-- Live public feed matches section
+## Frontend (Vercel)
 
-## Architecture
+https://hantawatch-realtime.vercel.app
+
+## Backend API (Render)
+
+https://hantawatch-realtime.onrender.com
+
+## API Documentation
+
+https://hantawatch-realtime.onrender.com/docs
+
+## Health Check
+
+https://hantawatch-realtime.onrender.com/healthz
+
+---
+
+# 🚀 Features
+
+## Dashboard
+
+- Real-time public-health dashboard
+- Summary statistics cards
+- Case fatality rate calculation
+- Curated baseline outbreak table
+- Live ingestion status section
+- Manual live refresh button
+- Responsive modern UI
+
+## Backend
+
+- FastAPI REST API
+- Scheduled ingestion using APScheduler
+- RSS/public feed monitoring
+- SQLite persistence layer
+- Health check endpoint
+- Swagger/OpenAPI documentation
+
+## Frontend
+
+- Next.js + TypeScript
+- Environment-based API configuration
+- Deployed on Vercel
+- Live backend integration
+- Public deployment support
+
+---
+
+# 🧠 Real-Time Architecture
 
 ```txt
-Official/public RSS feeds + official pages
-        ↓
-FastAPI ingestion service
-        ↓
-SQLite live_items table
-        ↓
-FastAPI JSON endpoints
-        ↓
-Next.js dashboard
+Official/Public RSS Feeds + Official Pages
+                ↓
+        FastAPI Ingestion Service
+                ↓
+        SQLite Live Items Store
+                ↓
+        FastAPI JSON Endpoints
+                ↓
+        Next.js Frontend Dashboard
+                ↓
+              User
 ```
 
-The curated CSV still exists as a stable baseline dataset. The real-time part monitors feeds and official pages for new hantavirus-related items.
+The curated CSV dataset still exists as a stable baseline dataset while the ingestion service continuously monitors public sources for hantavirus-related updates.
 
-## Sources monitored by default
+---
 
-RSS feeds:
+# 📡 Sources Monitored
+
+## RSS Feeds
 
 - WHO Disease Outbreak News RSS
-- CDC Emerging Infectious Diseases current issue RSS
-- CDC Emerging Infectious Diseases ahead-of-print RSS
+- CDC Emerging Infectious Diseases RSS
+- CDC Ahead-of-Print RSS
 - ECDC Latest News RSS
 
-Official pages:
+## Official Pages
 
-- CDC Andes Virus Situation Summary
+- CDC Andes Virus Summary
 - CDC Reported Hantavirus Cases
 
-You can edit these in:
+You can modify monitored sources in:
 
 ```txt
 backend/app/ingest.py
 ```
 
-## Run with Docker
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- Next.js
+- TypeScript
+- CSS / Global Styling
+- Vercel
+
+## Backend
+
+- FastAPI
+- Python
+- APScheduler
+- SQLite
+- Pandas
+- Feedparser
+
+## DevOps / Deployment
+
+- Docker
+- Docker Compose
+- GitHub
+- Render
+- Vercel
+
+---
+
+# ⚙️ Environment Variables
+
+Frontend uses:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://hantawatch-realtime.onrender.com
+```
+
+---
+
+# 🐳 Run with Docker
 
 ```bash
 docker compose up --build
@@ -68,36 +153,50 @@ Backend:  http://localhost:8000
 API docs: http://localhost:8000/docs
 ```
 
-## Run locally without Docker
+---
 
-### Backend
+# 💻 Run Locally Without Docker
+
+## Backend
 
 ```bash
 cd backend
+
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# macOS / Linux
+source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+
 pip install -r requirements.txt
+
 uvicorn app.main:app --reload
 ```
 
-### Frontend
+## Frontend
 
 ```bash
 cd frontend
+
 npm install
+
 npm run dev
 ```
 
-## API endpoints
+---
 
-### Baseline reports
+# 📚 API Endpoints
+
+## Baseline Reports
 
 ```txt
 GET /api/reports
 GET /api/reports/summary
 ```
 
-### Real-time ingestion
+## Live Ingestion
 
 ```txt
 GET  /api/live/items
@@ -105,11 +204,21 @@ GET  /api/live/status
 POST /api/live/refresh
 ```
 
-Use `POST /api/live/refresh` to manually trigger ingestion during a demo.
+Use:
 
-## How “real-time” is it?
+```txt
+POST /api/live/refresh
+```
 
-This is real-time in the practical dashboard sense: it refreshes from public online sources on a schedule and can be manually refreshed. It is not second-by-second streaming.
+to manually trigger ingestion during demos.
+
+---
+
+# ⏱️ Refresh Strategy
+
+This project is “real-time” in the practical dashboard sense.
+
+The ingestion service periodically refreshes monitored public sources and also supports manual refresh triggering.
 
 Default refresh interval:
 
@@ -117,23 +226,75 @@ Default refresh interval:
 Every 6 hours
 ```
 
-Change it in `backend/app/main.py`:
+Modify in:
 
-```python
-scheduler.add_job(refresh_live_data, "interval", hours=6, id="refresh_live_data", replace_existing=True)
+```txt
+backend/app/main.py
 ```
 
-## Suggested next upgrades
+```python
+scheduler.add_job(
+    refresh_live_data,
+    "interval",
+    hours=6,
+    id="refresh_live_data",
+    replace_existing=True
+)
+```
+
+---
+
+# 🔒 CORS + Deployment Notes
+
+- Frontend and backend are deployed separately
+- Backend allows Vercel frontend domains via CORS
+- Render free-tier instances may spin down during inactivity
+- First request after inactivity may take ~30–60 seconds
+
+---
+
+# 🧪 Suggested Future Improvements
 
 - PostgreSQL instead of SQLite
-- Map view with Leaflet or Mapbox
-- Admin upload page for CSV/Excel reports
-- NLP extraction of cases, deaths, dates, and locations from articles
-- Deduplication by canonical URL and title similarity
-- Source confidence score
-- Email/Slack alert when high-severity outbreak terms appear
-- Airflow or GitHub Actions ETL pipeline
+- Interactive outbreak heatmap
+- Leaflet or Mapbox integration
+- NLP extraction from articles
+- AI outbreak summarization
+- Source confidence scoring
+- Alerting system (email/Slack)
+- Authentication/admin dashboard
+- Kubernetes deployment
+- CI/CD pipelines with GitHub Actions
+- Unit/integration testing
 
-## Portfolio description
+---
 
-Built a real-time infectious disease surveillance dashboard using Next.js, FastAPI, SQLite, scheduled ETL, RSS ingestion, and Docker to monitor hantavirus-related public-health updates from official/public sources.
+# 📸 Demo
+
+## Local Dashboard
+
+Add screenshots here later.
+
+Example:
+
+```txt
+/docs/screenshots/dashboard.png
+```
+
+---
+
+# 📄 Portfolio Description
+
+Built and deployed a real-time infectious disease surveillance dashboard using Next.js, FastAPI, SQLite, APScheduler, RSS ingestion, Docker, Render, and Vercel to monitor hantavirus-related public-health updates from official/public sources.
+
+---
+
+# 👨‍💻 Author
+
+Ryan Trisnadi
+
+LinkedIn:
+https://www.linkedin.com/in/ryan-trisnadi-732046106/
+
+GitHub:
+https://github.com/ryantrisnadi
